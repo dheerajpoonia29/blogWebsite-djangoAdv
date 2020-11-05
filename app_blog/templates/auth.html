@@ -1,9 +1,52 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Auth</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+
+	{% block title %} Auth {% endblock %}
+
+
+	{% block body %}
+		<button onclick=show_signup()>create account</button>
+		<button onclick=show_login()>login</button>
+
+		<div id="login" style="display:none">
+			<form class="form" action="/login" method="post">
+				{% csrf_token %}
+				<input type="text" name="input_email" placeholder="enter email">
+				<input type="text" name="input_password" placeholder="enter password">
+				<button>Submit</button>
+			</form>
+		</div>
+
+		<div id="signup" style="display:none">
+			<form action="/signup" method="post">
+				{% csrf_token %}
+				<input type="text" name="input_name" placeholder="enter name">
+				<input type="text" name="input_email" placeholder="enter email">
+				<input type="text" name="input_password" placeholder="enter password">
+				<button>Submit</button>
+			</form>
+		</div>
+	{% endblock %}
+
+		
+	{% block script %}
+		function show_signup()
+		{
+			console.log('show signup')
+			var ele = document.getElementById('signup')
+			ele.style.display = 'block'; 
+
+			var ele = document.getElementById('login')
+			ele.style.display = 'none'; 
+		}
+
+		function show_login()
+		{
+			console.log('show login')
+			var ele = document.getElementById('login')
+			ele.style.display = 'block'; 
+
+			var ele = document.getElementById('signup')
+			ele.style.display = 'none'; 
+		}
+    {% endblock %}

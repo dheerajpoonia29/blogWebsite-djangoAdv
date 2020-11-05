@@ -1,11 +1,20 @@
 from django.db import models
-from app_user.models import User
+
+class User(models.Model):
+	id = models.AutoField(primary_key=True)
+	name = models.CharField(max_length=50)
+	email = models.CharField(max_length=50, unique=True, null=False)
+	password = models.CharField(max_length=50)
+	role = models.IntegerField(default=0)
+	# 0-admin, 1-blog
+	def __str__(self):
+		return str(self.id)+', '+self.name+', '+self.email+', '+self.password
 
 class Author(models.Model):
 	id = models.AutoField(primary_key=True)
 	# user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False, unique=True)
 	# UNIQUE TRUE HAS SAME EFFECT AS ONETOONE FIELD
-	user_id = models.OneToOneField('User', on_delete=models.CASCADE)
+	user_id = models.OneToOneField('User', on_delete=models.CASCADE, related_name='author_points_to_user')
 	
 	# update role of user to author
 	# user = User.objects.get(id=user_id)
@@ -21,20 +30,16 @@ class Author(models.Model):
 			# >>> for q in obj:
 			# ...     print(q.id, q.title)
 
+Category = ["music", "sports", "food", "tech"]
+
 class Blog(models.Model):
 	id = models.AutoField(primary_key=True)
 
-	class Category(models.IntegerChoices):
-		sports = 0
-		music = 1
-		food = 2
-		education = 3	
-
-	category = Category.music	
+	category = models.CharField(max_length=50, default="none")
 	pub_date = models.DateField(auto_now=True)
 
 	# many to one -> foreign key
-	author_id = models.ForeignKey('Author', on_delete=models.CASCADE, null=False, related_name='author_blog')
+	author_id = models.ForeignKey('Author', on_delete=models.CASCADE, null=False, related_name='blog_points_to_author')
 	# rating_id = models.ManyToManyField('Rating')
 	rating_id = models.ForeignKey('Rating', on_delete=models.CASCADE, null=True)
 

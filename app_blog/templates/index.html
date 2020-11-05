@@ -1,21 +1,103 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Homepage</title>
-</head>
-<body>
-	<h1>bloger</h1>
-	<ul>
-		<li>bloger login</li>
-		<li>bloger create account</li>
-	</ul>
+{% extends "base.html" %}
+
+
+	{% block title %} Welcome {% endblock %}
+
+
+
+	{% block body %}
+		<div class="alert alert-success">
+			{{msg}}
+		</div>
+
+		<!-- <div>
+			<h1> your info </h1>
+			<ul>
+				<li>{{ user.name }}</li>
+				<li>{{ user.email}}</li>
+				<li>{{ user.role }}</li>
+			</ul>
+		</div> -->
+
+		{% if user.role %}
+			<div>
+				<h1> YOU ARE AUTHOR </h1>
+				<a href="{% url 'url_name_author_panel' user.id %}">click to open your author panel</a>
+			</div>
+		{% else %}
+		    <div>
+		    	<h1> YOU ARE VIEWER </h1>		    	
+				<a href="{% url 'url_name_register_as_author' user.id %}">click here to became author</a>
+		    </div>
+		{% endif %}
 		
-	<h1>viewer</h1>
-	<ul>
-		<li>sports blog</li>
-		<li>tech blog</li>
-		<li>food blog</li>
-		<li>politics blog</li>
-	</ul>
-</body>
-</html>
+		<div id='target' onLoad='refresh()'>
+			<h1>BLOG</h1>
+			<ul>
+				{% for blog in all_blog %}
+					<li>
+						<div>
+							<h3><blold>{{ blog.title }}</blold></h3>
+						</div>
+						
+						<div>
+							<p>{{ blog.body }}</p>
+						</div>
+
+						<div class="row">
+							<div class="col">
+								<p>{{ blog.pub_date }}</p>
+							</div>
+							<div class="col">
+								<p>{{ blog.category }}</p>
+							</div>
+							<div class="col">
+								<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter{{ blog.id }}">
+						  			author detail
+								</button>
+							</div>
+						</div>
+						
+						
+
+						
+						<div class="modal fade" id="exampleModalCenter{{ blog.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+							  <div class="modal-dialog modal-dialog-centered" role="document">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <h5 class="modal-title" id="exampleModalLongTitle">Author Detail</h5>							        
+							      </div>
+							      <div class="modal-body">
+							      	<h4>
+							      		author id = {{ blog.author_id.id}}
+							      	</h4>
+							      	<h4>						      		
+							        author name = {{ blog.author_id.user_id.name }} </h4>
+							        <h4>
+							        author mail address = {{ blog.author_id.user_id.email }} </h4>	        
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							      </div>
+							    </div>
+							  </div>
+						</div>
+					</li>
+				{% endfor %}
+			</ul>			
+		</div>
+
+		
+				
+	{% endblock %}
+
+	{% block script %}
+		function refresh(){
+	        setTimeout(window.location.reload(), 1);
+	    }
+	{% endblock %}
+
+	{% block footer %}
+		<!-- <input type=button value="Previous Page" onClick="javascript:history.go(-1);"> -->
+		<a href="{% url 'url_name_logout' %}" type="button">log out</a>
+	{% endblock %}

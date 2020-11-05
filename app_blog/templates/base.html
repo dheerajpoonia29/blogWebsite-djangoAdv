@@ -14,8 +14,23 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>     
+    <nav>
+        blog website
+    </nav>
+
     {% block body %}
     {% endblock %}
-    </div>
+
+    
+    <footer>
+        footer
+        {% block footer %}
+        {% endblock %}
+    </footer>   
+
+    <script type="text/javascript">
+        {% block script %}
+        {% endblock %}
+    </script>    
 </body>
 </html>

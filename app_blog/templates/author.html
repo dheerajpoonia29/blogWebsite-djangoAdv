@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+
+	{% block title %} Author Panel {% endblock %}
+
+
+
+	{% block body %}
+		<div class="alert alert-success">
+			{{msg}}
+		</div>
+
+		<!-- <div>
+			<h1> author your info </h1>
+			<ul>
+				<li>author.id {{ author.id }}</li>				
+				<li>author.user_id.id {{ author.user_id.id }}</li>
+				<li>author.user_id.name {{ author.user_id.name }}</li>
+				<li>author.user_id.email {{ author.user_id.email }}</li>
+			</ul>
+		</div> -->
+
+		<div>
+			<h1>ADD NEW BLOG</h1>
+			<button onclick="document.getElementById('add').style='block'">add new blog</button>
+			<div id="add" style="display:none">
+				<form class="form" action="/add_blog" method="post">
+				{% csrf_token %}
+					<div>
+						<label>author id</label>
+						<input type="number" value="{{ author.id }}" name="input_author_id">
+					</div>
+					<div>
+						<label>category</label>
+						<select name="input_category">
+							<!-- <option value="hi">1</option>
+							<option value="bye">2</option> -->
+							{% for category in blog_category %}
+									<option value="{{ category }}">{{ category }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div>
+						<label>blog title</label>
+						<input type="text" name="input_title" placeholder="enter title" required="">
+					</div>
+					<div>
+						<label>blog body</label>
+						<textarea cols="50" rows="10" name="input_body" placeholder="enter body" required=""></textarea>
+					</div>		
+					<div>
+						<button type='submit'>submit</button>
+					</div>						
+				</form>
+			</div>
+		</div>
+
+		<div>
+			<h1> YOUR BLOG LIST </h1>
+			<table style="width:100%">
+				<tr>
+				    <th>id</th>
+				    <th>published data</th>
+				    <th>category</th>
+				    <th>title</th>
+				    <th>body</th>
+				    <th>edit</th>
+				    <th>delete</th>
+				</tr>
+				{% for blog in all_blogs %}
+				<tr>
+					<td>{{ blog.id }}</td>
+					<td>{{ blog.pub_date }}</td>
+					<td>{{ blog.category }}</td>
+					<td>{{ blog.title }}</td>
+					<td>{{ blog.body }}</td>
+					<td>
+
+				    	<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#ModalCenter{{blog.id}}">
+						  			<span class="glyphicon glyphicon-pencil"></span> Edit
+								</button>
+
+				    	<div class="modal fade" id="ModalCenter{{blog.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				    	<!-- FORM FOR EDIT -->
+						 <form class="form" action="/add_blog" method="post">
+						{% csrf_token %}
+							  <div class="modal-dialog modal-dialog-centered" role="document">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <h5 class="modal-title" id="exampleModalLongTitle">Author Detail</h5>
+							        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							          <span aria-hidden="true">&times;</span>
+							        </button>
+							      </div>
+							      <div class="modal-body">
+							      	
+						<div>
+							<label>blog id</label>
+							<input type="number" name="input_blog_id" value="{{ blog.id }}">
+						</div>	
+						<div>
+						<label>author id</label>
+							<input type="number" value="{{ author.id }}" name="input_author_id">
+						</div>
+						<div>
+							<label>category</label>
+							<select name="input_category">
+								<!-- <option value="hi">1</option>
+								<option value="bye">2</option> -->
+								{% for category in blog_category %}
+										
+										<option value="{{ category }}">{{ category }}</option>
+								{% endfor %}
+							</select>
+						</div>
+						<div>
+							<label>blog title</label>
+							<input type="text" value="{{ blog.title }}"  name="input_title">
+						</div>
+						<div>
+							<label>blog body</label>
+							<textarea cols="50" rows="10"  name="input_body" >{{ blog.body }}</textarea>
+						</div>		
+										
+					
+
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							      </div>
+							      <div>
+									<button type='submit'>submit</button>
+									</div>		
+							    </div>
+
+							  </div>
+							</form>
+						</div>
+
+
+					</td>
+					<td>
+						<a href="{% url 'url_name_delete_blog' blog.id %}" class="btn btn-info btn-lg">
+				          <span class="glyphicon glyphicon-trash"></span> Trash 
+				        </a>
+					</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+	{% endblock %}
+
+	{% block script %}
+		function showAdd()
+		{
+			document.getElementById('signup').style.display = 'block';
+		}
+	{% endblock %}
+
+	{% block footer %}
+		<a href="{% url 'url_name_index_redirect' %}">goto homepage</a>
+	{% endblock %}
